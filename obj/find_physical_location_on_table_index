@@ -1,0 +1,15 @@
+-- For getting the physical location of a table:
+
+postgres=# select pg_relation_filepath('test');
+pg_relation_filepath
+----------------------
+base/13635/17395
+(1 row)
+
+-- For getting the physical location of an index:
+
+postgres=# select pg_relation_filepath('test_idx');
+pg_relation_filepath
+----------------------
+base/13635/17638
+(1 row)
