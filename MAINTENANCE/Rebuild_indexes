@@ -1,0 +1,42 @@
+
+
+REINDEX rebuilds an index using the data stored in the index's table, replacing the old copy of the index. There are several scenarios in which to use REINDEX:
+
+- Rebuild particular index:
+
+postgres=# REINDEX INDEX TEST_IDX2;
+REINDEX
+
+-- Rebuild all indexes on a table:
+postgres=# REINDEX TABLE TEST;
+REINDEX
+
+-- Rebuild all indexes of tables in a schema:
+postgres=# reindex schema public;
+REINDEX
+
+-- Rebuild all indexes in a database :
+
+postgres=# reindex database dbaclass;
+REINDEX
+
+-- Reindex with verbose option:
+
+postgres=# reindex (verbose) table test;
+INFO: index "test_idx" was reindexed
+DETAIL: CPU: user: 5.44 s, system: 2.72 s, elapsed: 11.96 s
+INFO: index "test_idx2" was reindexed
+DETAIL: CPU: user: 3.34 s, system: 1.01 s, elapsed: 5.49 s
+INFO: index "pg_toast_17395_index" was reindexed
+DETAIL: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+REINDEX
+
+Rebuild index without causing lock on the table:( using concurrently option) 
+
+postgres=# REINDEX ( verbose) table concurrently test;
+INFO: index "public.test_idx" was reindexed
+INFO: index "public.test_idx2" was reindexed
+INFO: index "pg_toast.pg_toast_17395_index" was reindexed
+INFO: table "public.test" was reindexed
+DETAIL: CPU: user: 11.09 s, system: 6.23 s, elapsed: 24.63 s.
+REINDEX
