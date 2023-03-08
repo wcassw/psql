@@ -1,0 +1,25 @@
+1. Create extension:
+postgres# create extension dblink;
+
+2. Create foreign server:( use the target postgres details.
+postgres=# CREATE SERVER oracle_dblink FOREIGN DATA WRAPPER dblink_fdw OPTIONS ( host '10.21.120.131' ,dbname 'postgres' , port '5444');
+
+3. Create user mapping details.
+postgres=# CREATE USER MAPPING FOR enterprisedb SERVER oracle_dblink OPTIONS ( user 'dba_wsc' ,password 'dba_wsc');
+
+4. Test the database link:
+postgres=# SELECT dblink_connect('my_new_conn', 'oracle_dblink');
+
+dblink_connect
+----------------
+OK
+(1 row)
+
+5. Fetch data using db_link:
+postgres=# select * from dblink('oracle_dblink','select object_name from test') as test_object(object_name varchar );
+object_name
+---------------------------------------------------
+PG_AGGREGATE_FNOID_INDEX
+PG_AM_NAME_INDEX
+PG_AM_OID_INDEX
+PG_AMOP_FAM_STRAT_INDEX
