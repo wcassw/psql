@@ -1,0 +1,61 @@
+We will change the port from 5444 to 5432 
+
+1. Check the existing port details
+=# select * from pg_settings where name='port';
+
+=# \conninfo
+=# show config_file;
+
+$  cat /pgdata/data/postgresql.conf | grep 'port'
+port = 5444 
+
+2. Update the port in postgresql.conf file:
+# (change requires restart)
+
+$  cat /pgdata/data/postgresql.conf | grep 'port'
+port = 5432
+
+3. restart postgres services:
+pg_ctl stop -D /pgdata/data
+pg_ctl start -D /pgdata/data
+
+Alternatively you can restart the service, if configured.
+root# systemctl stop edb-as-11
+root# systemctl start edb-as-11
+
+4. Check whether port has been updated
+$ psql -d postgres -p 5432
+
+postgres=# \x
+Expanded display is on.
+
+postgres=# select * from pg_settings where name='port';
+
+We can see , the port has been updated to 5432.
+
+Now If any streaming replication is enabled, then we need to update the primary server  port in recovery.conf file of standby server.
+
+5. Check for any streaming replication ( run On primary server)
+=# select * from pg_stat_replication;
+
+So we need to update the recovery.conf file in that standby server.
+
+6.Update the recovery.conf file in standby server.
+
+-- recovery.conf file resides inside data directory.
+$ cat /pgdata/data/recovery.conf
+
+7. Updating the postgresql.conf file:
+$  cat /pgdata/data/postgresql.conf | grep 'port'
+port = 5432                             # (change requires restart
+
+8.Restart the pg services in standby server.
+pg_ctl stop -D /pgdata/data
+pg_ctl start -D /pgdata/data
+
+Alternatively you can restart the service, if configured.
+root# systemctl stop edb-as-11
+root# systemctl start edb-as-11
+
+9.Check replication status on standby:
+postgres=# select * from pg_stat_wal_receiver;
