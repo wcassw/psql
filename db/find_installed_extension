@@ -1,0 +1,14 @@
+-- Find list of installed extension:
+psql# \dx
+
+(or)
+
+psql#\dx+
+
+(or)
+
+psql# SELECT * FROM pg_extension;
+
+-- For finding available extension in server:
+
+psql# SELECT * FROM pg_available_extensions;
