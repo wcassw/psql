@@ -1,0 +1,26 @@
+A schema is a named collection of tables. A schema can also contain views, indexes, 
+     sequences, data types, operators, and functions.
+
+--- Create schema:
+postgres=# create schema dba_schema;
+CREATE SCHEMA
+
+-- Create schema with authorize particular user:
+postgres=# create schema dba_schema authorization wsc1;
+CREATE SCHEMA
+
+-- Drop schema
+
+postgres=# drop schema dba_schema;
+DROP SCHEMA
+
+-- List down schemas present
+
+postgres=# \dn+
+List of schemas
+Name        | Owner.   | Access privileges    | Description
+------------+----------+----------------------+------------------------
+dba_schema  | wsc1     |                      |
+public      | postgres | postgres=UC/postgres+| standard public schema| | =UC/postgres |
+wsc         | postgres |                      |
+(3 rows)
