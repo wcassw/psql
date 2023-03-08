@@ -1,0 +1,11 @@
+--- in edb postgres advanced server we can create user profile
+---- similar to that of oracle.
+
+-- Create profile:
+# create profile REPORTING_PROFILE limit FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LIFE_TIME 90;
+
+--- Alter profile:
+# alter profile REPORTING_PROFILE limit FAILED_LOGIN_ATTEMPTS 1;
+
+-- view profile details:
+# select * from dba_profiles;
