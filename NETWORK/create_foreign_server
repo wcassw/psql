@@ -1,0 +1,11 @@
+1. Create foreign server:( use the target postgres details.
+postgres=# CREATE SERVER oracle_dblink FOREIGN DATA WRAPPER dblink_fdw OPTIONS ( host '10.21.120.131' ,dbname 'postgres' , port '5444');
+
+2. Add new parameter to existing foreign server:
+postgres=# ALTER SERVER oracle_dblink options ( ADD port '5444');
+
+3. Modify parameters in foreign server:
+postgres=# ALTER SERVER oracle_dblink options ( SET port '5432');
+
+4. Drop foreign server:
+postgres=# DROP SERVER oracle_dblink CASCADE;
