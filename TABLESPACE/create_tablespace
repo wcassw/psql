@@ -1,0 +1,12 @@
+REATE TABLESPACE:
+postgres=# create tablespace ts_postgres location '/Library/PostgreSQL/TEST/TS_POSTGRES';
+CREATE TABLESPACE
+
+RENAME TABLESPACE:
+postgres=# alter tablespace ts_postgres rename to ts_psqldb;
+ALTER TABLESPACE
+
+DROP TABLESPACE:
+
+postgres=# drop tablespace ts_psqldb;
+DROP TABLESPACE
