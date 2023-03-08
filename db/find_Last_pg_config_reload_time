@@ -1,0 +1,22 @@
+-- Last pg config reload time
+
+postgres=# select pg_conf_load_time() ;
+pg_conf_load_time
+----------------------------------
+2020-03-06 10:20:18.048689+05:30
+(1 row)
+
+-- Reload again and see whether reload time changed or not
+
+postgres=# select pg_reload_conf();
+pg_reload_conf
+----------------
+t
+(1 row)
+
+postgres=# select pg_conf_load_time() ;
+
+pg_conf_load_time
+----------------------------------
+2020-03-06 10:46:59.958056+05:30
+(1 row)
