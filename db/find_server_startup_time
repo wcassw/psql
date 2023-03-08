@@ -1,0 +1,15 @@
+-- Uptime of server
+
+postgres# SELECT now() - pg_postmaster_start_time() "uptime";
+uptime
+------------------------
+7 days 04:54:56.774981
+(1 row)
+
+-- Server startup time:
+
+postgres# SELECT pg_postmaster_start_time();
+pg_postmaster_start_time
+----------------------------------
+26-MAR-20 04:54:56.774981 +05:00
+(1 row)
