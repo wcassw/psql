@@ -1,0 +1,11 @@
+Partial index, means index will be created on a specific subset of data of a table.
+
+psqldb=> create index part_emp_idx on orders(tax) where tax > 400;
+CREATE INDEX
+
+psqldb=> \d part_emp_idx
+Index "pdbuser.part_emp_idx"
+Column  | Type          | Key? | Definition
+--------+---------------+------+------------
+tax     | numeric(12,2) | yes  | tax
+btree, for table "pdbuser.orders", predicate (tax > 400::numeric)
