@@ -1,0 +1,86 @@
+1. Download and install pg_profile 
+Download the extensions file from github link – > https://github.com/zubkov-andrei/pg_profile/releases
+Copy to server and unzip to the below location.
+
+[root@~]# cd /usr/edb/as12/share/extension/
+[root@extension]# ls -ltr *gz
+-rw-r--r-- 1 root root 186808 Jun 1 14:06 pg_profile--0.3.6.tar.gz
+[root@extension]# tar xzf pg_profile--0.3.6.tar.gz --directory /usr/edb/as12/share/extension/
+[root@extension]# ls -ltr
+total 3928
+-rw-r--r-- 1 root root 2259 Nov 24 2019 pldbgapi--unpackaged--1.1.sql
+
+--Connect with super user and create the extension:
+postgres=# CREATE EXTENSION pg_profile;
+
+2. verify the parameter setting:
+Make sure highlighted parameters are set as below.
+postgres=# select name,setting from pg_settings where name like 'track%';
+
+3. Create dependent extension:
+
+pg_stat_statement extension:
+For a better performance report with sql statement details, you need to have pg_stat_statement extension in your postgres setup.
+
+CREATE EXTENSION dblink;
+
+4. Verify that all extensions are present now
+postgres=# \dx
+
+5. Verify server details:
+By default local server will be added in the server list.
+postgres=# select * from show_servers();
+
+6. Gather sample for local:
+To generate a report, you need atleast two sample.
+postgres=# select * from show_samples;
+postgres=# select * from take_sample();
+postgres=# select * from show_samples;
+--- after doing some transaction.
+postgres=#  select * from take_sample();
+postgres=#  select * from show_samples;
+
+7. Generate performance report:
+1 and 2 are the sample id from show_samples
+
+$ psql -d postgres  -Aqtc "SELECT  get_report('local',1,2)" -o 1st_report.html
+
+8. Creating performance report for remote servers:
+If you want to generate report of postgres cluster on remote server, then you need to add that in server list .
+
+First you need to add the server.
+postgres=# SELECT create_server('elmtest','host=10.20.30.131 dbname=postgres port=5444');
+
+Update the .pgpass file, with remote server details(ip,port,super user ,password)
+$ cat .pgpass
+postgres=# select * from show_servers();
+postgres=#  select * from take_sample();
+-- If you need to generate sample for specific server, then pass that value in take_sample() like,
+postgres=#  select * from take_sample('elmtest');
+-- Show sample id for remote server elmtest:
+postgres=#  select * from show_samples('elmtest');
+--- Show sample id for all servers:
+postgres=# select * from show_samples;
+
+9.Setting retention period of samples:
+We cannot keep the sample ids forever as it will consume storage space. So better to set retention period like 30 days/60 days.
+So you can set max_sample_age for servers using below command.
+- 30 means 30 days.
+
+postgres=# select set_server_max_sample_age('elmtest',30);
+
+-- Create baseline,
+
+elmtest - server_name,
+plm_base1 - baseline_name,
+1 and 2 are start and end sample range.
+30 - retention period.
+
+postgres=# select create_baseline('elmtest','plm_base1',1,2,30);
+postgres=# select * from show_baselines();
+postgres=# select * from show_baselines('elmtest');
+postgres=# select keep_baseline('elmtest','plm_base1',50);
+postgres=# select * from show_baselines('elmtest');
+postgres=#  select drop_baseline('elmtest','plm_base1');
+
+REFERENCE – https://github.com/zubkov-andrei/pg_profile/blob/master/doc/pg_profile.md
