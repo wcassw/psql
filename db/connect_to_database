@@ -1,0 +1,26 @@
+$ export PATH=/Library/PostgreSQL/12/bin:$PATH
+$ which psql
+  /Library/PostgreSQL/12/bin/psql
+
+
+$ psql -d psqldb -U postgres
+Password for user postgres:
+psql (12.13)
+Type "help" for help.
+
+postgres=#
+
+Find current connection info:
+
+postgres=# \conninfo
+You are connected to database "psqldb" as user "postgres" via socket in "/tmp" at port "5432".
+
+postgres=# select current_schema,current_user,session_user,current_database();
+current_schema  | current_user | session_user | current_database
+----------------+--------------+--------------+------------------
+public          | postgres     | postgres     | psqldb
+
+Switch to another database:
+
+postgres-# \c psqldb2
+You are now connected to database "psqldb2" as user "postgres".
