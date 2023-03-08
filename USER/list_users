@@ -1,0 +1,28 @@
+--- List users present in postgres:
+
+postgres=# select usename,usesuper,valuntil from pg_user;
+usename        | usesuper | valuntil
+---------------+----------+---------------------------
+postgres       | t        |
+test_dbuser1   | f        | 2020-03-08 00:00:00+05:30
+
+postgres#select usename,usesuper,valuntil from pg_shadow;
+
+usename        | usesuper | valuntil
+---------------+----------+---------------------------
+postgres       | t        |
+test_dbuser1   | f        | 2020-03-08 00:00:00+05:30
+
+postgres#select usename,usesuper,valuntil from pg_shadow;
+
+postgres=# \du
+List of roles
+Role name      | Attributes                                                 | Member of
+---------------+------------------------------------------------------------+-----------
+postgres       | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
+test_dbuser1   | Password valid until 2020-03-08 00:00:00+05:30             | {}
+
+ 
+
+NOTE - > \du command output includes both user and roles(custom created roles only).
+postgres users are bydefault role, but roles are not bydefault user.
