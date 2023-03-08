@@ -1,0 +1,6 @@
+it is just like an oracle alert log, signal the log-file manager to switch to a new output file immediately.
+
+postgres=# select pg_rotate_logfile() ;
+pg_rotate_logfile
+-------------------
+t
