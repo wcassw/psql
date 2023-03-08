@@ -1,0 +1,25 @@
+autovacuum methods automates the executions vacuum,freeze and analyze commands.
+
+-- Find whether autovacuum is enabled or not:
+
+psqldb=# select name,setting,short_desc,boot_val,pending_restart from pg_settings 
+           where name in ('autovacuum','track_counts');
+name.         | setting | short_desc                                | boot_val | pending_restart
+--------------+---------+-------------------------------------------+----------+-----------------
+autovacuum    | on      | Starts the autovacuum subprocess.         | on        | f
+track_counts  | on      | Collects statistics on database activity. | on        | f
+(2 rows)
+
+-- Find other autovacuum related parameter settings
+psqldb=# select name,setting,short_desc,min_val,max_val,enumvals,boot_val,pending_restart 
+      from pg_settings where category like 'Autovacuum';
+
+
+- Change autovacuum settings:( they need restart)
+
+psqldb=# alter system set autovacuum_max_workers=10 ;
+ALTER SYSTEM
+
+Now restart :
+pg_ctl stop
+pg_ctl start
