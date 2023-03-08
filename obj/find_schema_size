@@ -1,0 +1,28 @@
+Below queries can be used to get schema wise size in postgres db
+
+postgres=# select schemaname,pg_size_pretty(sum(pg_relation_size(quote_ident(schemaname) || '.' || quote_ident(tablename)))::bigint) as schema_size 
+           FROM pg_tables group by schemaname;
+schemaname          | pg_size_pretty
+--------------------+----------------
+wsc                 | 8192 bytes
+public              | 3651 MB
+pg_catalog          | 2936 kB
+information_schema  | 96 kB
+(4 rows)
+
+postgres=# SELECT schemaname, pg_size_pretty(sum(table_size)::bigint) as schema_size,
+           (sum(table_size) / pg_database_size(current_database())) * 100 as percentage_of_total_db
+   FROM ( SELECT pg_catalog.pg_namespace.nspname as schemaname,
+                 pg_relation_size(pg_catalog.pg_class.oid) as table_size FROM pg_catalog.pg_class
+   JOIN pg_catalog.pg_namespace ON relnamespace = pg_catalog.pg_namespace.oid) t
+ GROUP BY schemaname
+ORDER BY schemaname;
+
+schemaname          | schema_size | percentage_of_total_db
+--------------------+-------------+----------------------------
+information_schema  | 96 kB       | 0.002561568956316216939600
+pg_catalog          | 6120 kB     | 0.16330002096515883000
+pg_toast            | 648 kB      | 0.01729059045513446400
+public              | 3651 MB     | 99.76265110861169191100
+wsc                 | 8192 bytes  | 0.000213464079693018078300
+(5 rows)
