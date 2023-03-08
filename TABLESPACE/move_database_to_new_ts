@@ -1,0 +1,7 @@
+postgres=#  alter database psqldb set tablespace ts_psqldb;
+
+Before running this. make sure there are no active connections in the database.
+You can kill the existing session using below query.
+
+postgres# select pg_terminate_backend(pid) from pg_stat_activity where datname='DB_NAME';
+
