@@ -1,0 +1,86 @@
+1. Create oracle client on postgres server:
+    install "instant client"
+
+2. Install oracle_fdw extension on postgres server:
+Download the package from github – https://github.com/laurenz/oracle_fdw
+
+[root]# export ORACLE_HOME=/var/lib/edb/app/enterprisedb/product/19.0.0/client_1
+[root]# export PATH=/usr/edb/as12/bin:$PATH
+[root]#
+[root]# cd /pgdata
+[root]# cd oracle_fdw-master/
+[root]# make
+
+[root]# make install
+/bin/mkdir -p '/usr/edb/as12/lib'
+/bin/mkdir -p '/usr/edb/as12/share/extension'
+/bin/mkdir -p '/usr/edb/as12/share/extension'
+/bin/mkdir -p '/usr/share/doc/extension'
+/bin/install -c -m 755  oracle_fdw.so '/usr/edb/as12/lib/oracle_fdw.so'
+/bin/install -c -m 644 .//oracle_fdw.control '/usr/edb/as12/share/extension/'
+/bin/install -c -m 644 .//oracle_fdw--1.2.sql .//oracle_fdw--1.0--1.1.sql .//oracle_fdw--1.1--1.2.sql  '/usr/edb/as12/share/extension/'
+/bin/install -c -m 644 .//README.oracle_fdw '/usr/share/doc/extension/'
+
+3. Get postgres system service file.
+[rootdata]# systemctl status edb-as-12.service
+
+--- as it is under /usr/lib/ location. better to copy the file to /etc/ and update the file there itself.
+cp /usr/lib/systemd/system/edb-as-12.service /etc/systemd/system/edb-as-12.service
+
+NOTE – > If you using pg_ctl command manually to stop and start postgres cluster(instead of service), 
+       then you just need to define the variables inside bash_profile. and restart using pg_ctl .
+
+4.Update the service file with environment variables:
+$ cat /etc/systemd/system/edb-as-12.service
+
+[Service]     
+Type=notify
+Environment=ORACLE_HOME=/var/lib/edb/app/enterprisedb/product/19.0.0/client_1   # add entry
+Environment=TNS_ADMIN=/var/lib/edb/app/enterprisedb/product/19.0.0/client_1/bin   # add entry
+Environment=LD_LIBRARY_PATH=/var/lib/edb/app/enterprisedb/product/19.0.0/client_1/lib   # add entry
+
+5.Reload the daemon and restart the postgres cluster:
+
+[root~]# systemctl daemon-reload
+[root ~]# systemctl stop edb-as-12.service
+[root ~]# systemctl start edb-as-12.service
+
+6.Create the extension oracle_fdw;
+postgres=# create extension oracle_fdw;
+postgres=# \dx oracle*
+postgres=# \dew
+
+7.Create foreign server:
+postgres=# create server ora_gamedb foreign data wrapper oracle_fdw options (dbserver '10.21.45.64:1524/AMIIFDEV');
+postgres=# \des+
+
+8.Create user mapping:
+—  provide oracle database username and password
+
+postgres=#  create user mapping for enterprisedb server ora_gamedb options (USER 'dba_wsc' , password 'dba_wsc');
+postgres=# \deu+
+
+9.Now create the foreign table to access oracle data:
+
+The table (EMP) structure has to be same as that of oracle database
+postgres=#  create foreign table EMP (EMP_NAME VARCHAR2(20), EMP_ID numeric) server ora_gamedb  options  ( schema 'DBA_WSC' , table 'EMP');
+postgres=# select count(*) from EMP;
+postgres=# select * from emp;
+
+COMMON ISSUES DURING SETUP:
+
+1. If environmental variables are not set properly, then below error.
+
+postgres=# select count(*) from EMP;
+ERROR:  error connecting to Oracle: OCIEnvCreate failed to create environment handle
+DETAIL:
+
+Make sure to set env values as explained in point 4 of this article.
+
+2. If ld_library_path is not set or incorrect , then below error
+
+postgres=# create extension oracle_fdw;
+ERROR:  could not load library "/usr/edb/as12/lib/oracle_fdw.so": libclntsh.so.19.1: cannot open shared object file: No such file or directory
+
+Make sure to set LD_LIBRARY_PATH values
+
