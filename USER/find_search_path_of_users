@@ -1,0 +1,14 @@
+-- Find search_path of users in a particular database ( replace your db_name(EDB))
+
+SELECT r.rolname, d.datname, drs.setconfig
+FROM pg_db_role_setting drs
+LEFT JOIN pg_roles r ON r.oid = drs.setrole
+LEFT JOIN pg_database d ON d.oid = drs.setdatabase
+WHERE d.datname = 'EDB';
+
+-- Find search_path of users in postgres db cluster( all database)
+
+SELECT r.rolname, d.datname, drs.setconfig
+FROM pg_db_role_setting drs
+LEFT JOIN pg_roles r ON r.oid = drs.setrole
+LEFT JOIN pg_database d ON d.oid = drs.setdatabase;
