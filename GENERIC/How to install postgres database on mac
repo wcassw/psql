@@ -1,0 +1,18 @@
+1. Download the software:  
+
+Link – > https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
+2. Start the downloaded executable:
+    - install directory:   eg.  /Library/PostgreSQL/14
+    - choose components
+    - data  directory:   eg.  /Library/PostgreSQL/14/data
+    - password
+    - port: 5432
+    - Locale: default
+    
+3. Validate the installation:
+$ ps -ef | grep postgres
+
+4. Now login with postgres user and connect to server for validation:
+./psql -d postgres -U postgres
+=# select datname from pg_database;
