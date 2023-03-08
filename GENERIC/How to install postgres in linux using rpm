@@ -1,0 +1,50 @@
+install postgres 14.( Though installation steps are same for all versions).
+1. Download the postgres server rpms.
+
+https://yum.postgresql.org/rpmchart/
+2.Install the rpms( in the below sequence).
+
+Make sure to follow the below order while installing the rpm, Otherwise dependency error will come.
+total 16128
+-rwxr-xr-x 1 root root  698212 Jul 10 12:17 postgresql14-contrib-14.2-1PGDG.rhel7.x86_64.rpm
+-rwxr-xr-x 1 root root 1556440 Jul 10 12:17 postgresql14-14.2-1PGDG.rhel7.x86_64.rpm
+-rwxr-xr-x 1 root root  273192 Jul 10 12:17 postgresql14-libs-14.2-1PGDG.rhel7.x86_64.rpm
+-rwxr-xr-x 1 root root 5783224 Jul 10 12:17 postgresql14-server-14.2-1PGDG.rhel7.x86_64.rpm
+
+# rpm -ivh postgresql14-libs-14.2-1PGDG.rhel7.x86_64.rpm
+# rpm -ivh postgresql14-14.2-1PGDG.rhel7.x86_64.rpm
+# rpm -ivh postgresql14-server-14.2-1PGDG.rhel7.x86_64.rpm
+# rpm -ivh postgresql14-contrib-14.2-1PGDG.rhel7.x86_64.rpm
+
+Once the rpms are installed, an osuser postgres user will be created and postgres binaries will be created /usr directory.
+
+3. Initialize the postgres cluster:
+
+--Create a data directory and log_directory
+mkdir -p /oracle/pg_data
+mkdir -p /oracle/pg_data/log
+
+--- Initialize the cluster:
+[postgres bin]$ /usr/pgsql-14/bin/initdb --pgdata /oracle/pg_data
+....
+Success. You can now start the database server using:
+
+    /usr/pgsql-14/bin/pg_ctl -D /oracle/pg_data -l logfile start
+
+4. Start postgres cluster;
+[postgres@pg_data]$  /usr/pgsql-14/bin/pg_ctl -D /oracle/pg_data -l logfile start
+waiting for server to start.... done
+server started
+
+[postgres@pg_data]$ psql -d postgres -p 5432
+=# \list
+
+If you want to be able to connect to this server remotely , then modify listen_addresses  parameter in postgres.conf file and restart  the cluster.
+
+
+vi /oracle/pg_data/postgres.conf 
+listen_addresses='*'
+
+$ /usr/pgsql-14/bin/pg_ctl stop -D /oracle/pg_data
+$ /usr/pgsql-14/bin/pg_ctl start -D /oracle/pg_data
+
