@@ -7,7 +7,7 @@ postgres=# \db+
 (or)
 
 -- For getting size of specific tablespace:
-postgres=# select pg_size_pretty(pg_tablespace_size('ts_dbaclass'));
+postgres=# select pg_size_pretty(pg_tablespace_size('ts_psqldb'));
 
 pg_size_pretty
 ----------------
