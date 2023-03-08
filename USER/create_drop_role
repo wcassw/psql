@@ -1,0 +1,19 @@
+- Create role :
+
+psqldb=# create role dev_admin;
+CREATE ROLE
+
+psqldb=# create role dev_admin with valid until '03-MAR-30';
+CREATE ROLE
+
+-- role with createdb and superuser privilege and login keyword mean it can login to db like a normal user
+
+psqldb=# create role dev_admin with createdb createrole login ;
+CREATE ROLE
+
+DROP ROLE:
+
+psqldb=# drop role dev_admin;
+DROP ROLE
+
+select rolname,rolcanlogin,rolvaliduntil from pg_roles;
