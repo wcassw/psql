@@ -1,0 +1,18 @@
+---View existing connection limit setting:( datconnlimit )
+
+postgres=# select datname,datallowconn,datconnlimit from pg_database where datname='psqldb';
+-[ RECORD 1 ]--+------------
+datname        | psqldb
+datallowconn   | t.
+datconnlimit   | -1.       -- >Means unlimited connections allowed
+
+-- To set a specific limit for connection
+psqldb=# alter database psqldb connection limit 100;
+ALTER DATABASE
+
+-- To restrict all the connections to db
+
+psqldb=# alter database psqldb connection limit 0;
+ALTER DATABASE
+
+NOTE - > Even if connection limit is set to 0 , the superuser will be able to connect to database.
