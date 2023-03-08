@@ -1,0 +1,23 @@
+-- You can use watch command to run a particular query repeatedly until you cancel it.
+-- watch 3 , means for every 3 seconds, the previous query will be executed 
+
+postgres=# select count(*) from test;
+count
+-------
+4226
+(1 row)
+
+postgres=# \watch 3
+Tue 19 Apr 2020 08:18:17 PM +03 (every 3s)
+
+count
+-------
+4226
+(1 row)
+
+Tue 19 Apr 2020 08:18:20 PM +03 (every 3s)
+
+count
+-------
+4226
+(1 row)
