@@ -1,0 +1,6 @@
+-- Disable autovacuum for a table:
+postgres=# alter table test1 set( autovacuum_enabled = off);
+
+-- Enable autovacuum for a table
+postgres=# alter table test1 set( autovacuum_enabled = on);
+
