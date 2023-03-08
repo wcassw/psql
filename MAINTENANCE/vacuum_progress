@@ -1,0 +1,13 @@
+postgres# select * from pg_stat_progress_vacuum;
+-[ RECORD 1 ]------+--------------------
+pid                | 12540
+datid              | 21192
+datname            | b2cnsmst
+relid              | 22402
+phase              | cleaning up indexes
+heap_blks_total.   | 624176
+heap_blks_scanned  | 624176
+heap_blks_vacuumed | 624176
+index_vacuum_count | 0
+max_dead_tuples    | 178956970
+num_dead_tuples    | 0
