@@ -1,0 +1,26 @@
+-- providing superuser role will make an user superuser.
+
+postgres=# select usename,usesuper from pg_user where usename='pdbtest';
+usename  | usesuper
+---------+----------
+pdbtest  | f
+(1 row)
+
+postgres=#
+postgres=# alter user pdbtest with superuser;
+ALTER ROLE
+postgres=# select usename,usesuper from pg_user where usename='pdbtest';
+usename  | usesuper
+---------+----------
+pdbtest  | t
+
+-- How to revoke superuser:
+
+postgres=# alter user pdbtest with nosuperuser;
+ALTER ROLE
+postgres=#
+postgres=# select usename,usesuper from pg_user where usename='pdbtest';
+usename  | usesuper
+---------+----------
+pdbtest  | f
+(1 row)
