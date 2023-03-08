@@ -1,0 +1,30 @@
+Describe the table:
+
+postgres=# \d test
+Table "public.test"
+Column.      | Type   | Collation | Nullable | Default
+------------+---------+-----------+----------+---------
+sourcefile  | text.   | | |    -- >>>> Will get size for this one 
+sourceline  | integer  | | |.  -- >>>> Will get size for this one also
+seqno.      | integer | |. |
+name.        | text  | | |
+setting.    | text  | | |
+applied     | boolean  | | |
+error       | text.  | | |
+Indexes:
+"test_idx" btree (sourcefile)
+"test_idx2" btree (sourceline)
+ 
+
+-- Find the column size ( for sourcefile and sourceline)
+postgres=# select pg_size_pretty(sum(pg_column_size(sourcefile))) as total_size from test;
+total_size
+------------
+12 MB
+(1 row)
+
+postgres=# select pg_size_pretty(sum(pg_column_size(sourceline))) as total_size from test;
+total_size
+------------
+1152 kB
+(1 row)
