@@ -1,0 +1,15 @@
+1 . Get Config values from psql prompt.
+postgres=# select * from pg_settings;
+
+\x
+postgres=# select * from pg_settings where name='port';
+
+2. Alternatively you can check postgresql.conf file
+
+postgres=# show config_file;
+config_file
+---------------------------------
+/pgdata/data/postgresql.conf
+(1 row)
+
+cat /pgdata/data/postgresql.conf
