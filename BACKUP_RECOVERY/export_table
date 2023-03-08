@@ -1,0 +1,11 @@
+-- export specific column data to text file:
+copy EMPLOYEE( EMP_NAME,EMP_ID) to '/tmp/emp.txt';
+
+-- export complete table data to text file:
+copy EMPLOYEE to '/tmp/emp.txt';
+
+-- export table data to csv file:
+copy EMPLOYEE to '/tmp/emp.csv' with csv headers;
+
+-- export specific query output to csv file:
+copy ( select ename,depname from emp where depname='HR') to '/tmp/emp.csv' with csv headers;
