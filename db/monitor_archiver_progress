@@ -1,0 +1,6 @@
+postgres# select pg_walfile_name(pg_current_wal_lsn()),last_archived_wal,last_failed_wal,
+('x'||substring(pg_walfile_name(pg_current_wal_lsn()),9,8))::bit(32)::int*256 +
+('x'||substring(pg_walfile_name(pg_current_wal_lsn()),17))::bit(32)::int -
+('x'||substring(last_archived_wal,9,8))::bit(32)::int*256 -
+('x'||substring(last_archived_wal,17))::bit(32)::int
+as diff from pg_stat_archiver;
