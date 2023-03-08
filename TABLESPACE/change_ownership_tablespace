@@ -1,0 +1,5 @@
+-- Change ownership of tablespace ts_postgres to user dev_admin
+
+postgres# alter tablespace ts_postgres owner to dev_admin;
+
+postgres# \db+
