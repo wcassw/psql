@@ -1,0 +1,27 @@
+-- To stop/pause recovery on replication server(standby)
+
+postgres=# select pg_wal_replay_pause();
+pg_wal_replay_pause
+---------------------
+
+(1 row)
+
+postgres=# select pg_is_wal_replay_paused();
+pg_is_wal_replay_paused
+-------------------------
+t
+(1 row)
+
+-- To Resume recovery on replication server(standby)
+
+postgres=# select pg_wal_replay_resume();
+pg_wal_replay_resume
+----------------------
+
+(1 row)
+
+postgres=# select pg_is_wal_replay_paused();
+pg_is_wal_replay_paused
+-------------------------
+f
+(1 row)
