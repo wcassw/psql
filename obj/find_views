@@ -1,0 +1,10 @@
+postgres=# select * from pg_views where schemaname not in ('pg_catalog','information_schema','sys');
+count
+-------
+
+postgres#\dv
+List of relations
+Schema | Name | Type | Owner
+--------+--------------------+------+--------------
+public | pg_stat_statements | view | enterprisedb
+(1 row)
