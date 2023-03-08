@@ -1,0 +1,34 @@
+-- Below of any commands can be used to find the schema details:
+
+postgres=# select schema_name,schema_owner from information_schema.schemata;
+schema_name         | schema_owner
+--------------------+--------------
+wsc                | postgres
+information_schema | postgres
+public             | postgres
+pg_catalog         | postgres
+pg_toast_temp_1    | postgres
+pg_temp_1.         | postgres
+pg_toast           | postgres
+(7 rows)
+
+postgres=# select nspname as schema_name , pg_get_userbyid(nspowner) as schema_owner 
+           from pg_catalog.pg_namespace;
+schema_name         | schema_owner
+--------------------+--------------
+pg_toast            | postgres
+pg_temp_1           | postgres
+pg_toast_temp_1     | postgres
+pg_catalog          | postgres
+public              | postgres
+information_schema  | postgres
+wsc                 | postgres
+(7 rows)
+
+postgres=# \dn+
+List of schemas
+Name    | Owner    | Access privileges    | Description
+--------+----------+----------------------+------------------------
+public | postgres | postgres=UC/postgres+| standard public schema| | =UC/postgres |
+wsc    | postgres |                      |
+(2 rows)
