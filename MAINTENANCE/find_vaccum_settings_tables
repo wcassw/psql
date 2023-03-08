@@ -1,0 +1,13 @@
+postgres=# SELECT n.nspname, c.relname, pg_catalog.array_to_string(c.reloptions || array(
+  select 'toast.' ||x from pg_catalog.unnest(tc.reloptions) x),', ') as relopts
+FROM pg_catalog.pg_class c
+  LEFT JOIN pg_catalog.pg_class tc ON (c.reltoastrelid = tc.oid)
+  JOIN pg_namespace n ON c.relnamespace = n.oid
+   WHERE c.relkind = 'r'
+AND nspname NOT IN ('pg_catalog', 'information_schema');
+
+nspname  | relname                             | relopts
+---------+-------------------------------------+------------------------
+public   | text1                               |
+public   | town_id2                            |
+public   | text2                               | autovacuum_enabled=off
