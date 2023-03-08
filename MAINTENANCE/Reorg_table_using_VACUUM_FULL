@@ -1,0 +1,41 @@
+VACUUM FULL - > JUST LIKE MOVE COMMAND IN ORACLE . IT TAKES MORE TIME, 
+     BUT IT RETURNS THE SPACE TO OS BECAUSE OF ITS COMPLEX ALGORITHM. 
+     IT also requires additional disk space , which can store the new copy of the table., 
+     until the activity is completed. Also it locks the table exclusively, 
+     which block all operations on the table .
+
+-- Command to run vacuum full command for table:
+
+psqldb=# VACUUM FULL pdbtest.emptab;
+VACUUM
+
+DEMO TO CHECK HOW IT RECLAIMS SPACE:
+
+-- Check existing space and delete some data:
+psqldb=# select pg_size_pretty(pg_relation_size('pdbtest.emptab'));
+pg_size_pretty
+----------------
+114 MB
+(1 row)
+
+psqldb=# delete from pdbtest.emptab where oid=13634;
+DELETE 131072
+
+-- We can observe size is still same:
+
+psqldb=# select pg_size_pretty(pg_relation_size('pdbtest.emptab'));
+pg_size_pretty
+----------------
+114 MB
+(1 row)
+
+-- Run vacuum full and observe the space usage:
+
+psqldb=# VACUUM FULL pdbtest.emptab;
+VACUUM
+
+psqldb=# select pg_size_pretty(pg_relation_size('pdbtest.emptab'));
+pg_size_pretty
+----------------
+39 MB ---- > from 114MB it came down to 39 MB.
+(1 row)
