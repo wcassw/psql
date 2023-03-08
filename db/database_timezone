@@ -1,0 +1,15 @@
+postgres=# show timezone
+TimeZone
+--------------
+Asia/Kolkata
+(1 row)
+
+postgres=# SELECT current_setting('TIMEZONE');
+current_setting
+-----------------
+Asia/Kolkata
+
+postgres=# select name,setting,short_desc,boot_val from pg_settings where name='TimeZone';
+name     | setting      | short_desc                                                      | boot_val
+----------+--------------+-----------------------------------------------------------------+----------
+TimeZone | Asia/Kolkata | Sets the time zone for displaying and interpreting time stamps. | GMT
