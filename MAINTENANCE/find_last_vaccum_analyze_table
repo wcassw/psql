@@ -1,0 +1,26 @@
+-- Here the table_name is text1.  
+
+postgres=# select * from pg_stat_user_tables where relname='text1';
+-[ RECORD 1 ]-------+---------------------------------
+relid               | 914713
+schemaname          | public
+relname             | text1
+seq_scan            | 40
+seq_tup_read        | 12778861
+idx_scan            |
+idx_tup_fetch       |
+n_tup_ins           | 4774377
+n_tup_upd           | 0
+n_tup_del           | 4774377
+n_tup_hot_upd       | 0
+n_live_tup          | 0
+n_dead_tup          | 0
+n_mod_since_analyze | 0
+last_vacuum         |
+last_autovacuum     | 20-MAR-20 21:27:10.863536 +03:00
+last_analyze        | 20-MAR-20 21:05:05.874929 +03:00
+last_autoanalyze.   | 20-MAR-20 21:27:10.865308 +03:00
+vacuum_count        | 0
+autovacuum_count    | 6
+analyze_count       | 2
+autoanalyze_count   | 11
