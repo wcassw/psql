@@ -1,0 +1,20 @@
+postgres=# select * from pg_tablespace;
+
+(OR)
+
+postgres=# \db+
+
+(or)
+
+-- For getting size of specific tablespace:
+postgres=# select pg_size_pretty(pg_tablespace_size('ts_dbaclass'));
+
+pg_size_pretty
+----------------
+96 bytes
+(1 row)
+
+Pre-configured tablespaces:( these are default tablespaces)
+
+Pg_global - > PGDATA/global - > used for cluster wide table and system catalog
+Pg_default - > PGDATA/base directory - > it stores databases and relations
