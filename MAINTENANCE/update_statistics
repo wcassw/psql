@@ -1,0 +1,35 @@
+-- Analyze stats for a table testanalyze(schema is public)
+psqldb=# analyze testanalyze;
+ANALYZE
+
+-- For analyzing selected columns for emptab table ( schema is dbatest)
+psqldb=# analyze dbatest.emptab (datname,datdba);
+ANALYZE
+
+psqldb=# select relname,reltuples from pg_class where relname in ('testanalyze','emptab');
+relname      | reltuples
+-------------+-----------
+testanalyze  | 4
+emptab       | 4
+(2 rows)
+
+psqldb=# select schemaname,relname,analyze_count,last_analyze,last_autoanalyze from pg_stat_user_tables where relname in ('testanalyze','emptab');
+schemaname  | relname     | analyze_count | last_analyze                     | last_autoanalyze
+------------+-------------+---------------+----------------------------------+------------------
+public      | testanalyze | 1             | 2020-07-21 17:00:49.687053+05:30 |
+dbatest     | emptab      | 1             | 2020-07-21 17:10:01.111517+05:30 |
+(2 rows)
+
+---Analyze command with verbose command
+psqldb=# analyze verbose dbatest.emptab (datname,datdba);
+
+INFO:  analyzing "dbatest.emptab"
+INFO:  "emptab": scanned 1 of 1 pages, containing 4 live rows and 0 dead rows; 4 rows in sample, 4 estimated total rows
+ANALYZE
+
+---Analyze tables in the current schema that the user has access to.
+psqldb=# analyze ;
+ANALYZE
+
+NOTE: ANALYZE requires only a read lock on the target table, 
+      so it can run in parallel with other activity on the table.
