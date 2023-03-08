@@ -1,0 +1,25 @@
+-- Rename a user:
+
+postgres=# alter user dbatest rename to dbaprod;
+NOTICE: MD5 password cleared because of role rename
+ALTER ROLE
+
+postgres=# \du
+List of roles
+Role name  | Attributes                                                 | Member of
+-----------+------------------------------------------------------------+-----------
+dbaprod   |                                                             | {}
+postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS  | {}
+
+<< NOTE - AFTER renaming the user, you need to reset the password to same old one.
+
+i.e
+-- Change the password a user:
+
+postgres=# alter user dbaprod password 'test';
+ALTER ROLE
+
+--- Increase the validity of the user:
+
+postgres=# alter user dbaprod valid until 'Mar 20 2023';
+ALTER ROLE
