@@ -1,0 +1,23 @@
+-- Run on this primary server for outgoing replication details
+
+postgres=# select * from pg_stat_replication;
+-[ RECORD 1 ]----+---------------------------------
+pid              | 18556
+usesysid.        | 10
+usename          | enterprisedb
+application_name | walreceiver
+client_addr      | 10.20.76.12
+client_hostname  |
+client_port      | 44244
+backend_start    | 27-MAY-21 13:56:30.131681 +03:00
+backend_xmin     |
+state            | streaming
+sent_lsn.        | 0/401F658
+write_lsn        | 0/401F658
+flush_lsn        | 0/401F658
+replay_lsn.      | 0/401F658
+write_lag        |
+flush_lag        |
+replay_lag.      |
+sync_priority.   | 0
+sync_state       | async
