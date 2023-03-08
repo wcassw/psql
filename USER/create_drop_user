@@ -1,0 +1,26 @@
+CREATE USER:
+psqldb=# create user TEST_PSQLDB with password 'test123';
+CREATE ROLE
+
+CREATE USER WITH VALID UNTIL:
+
+psqldb=# create user TEST_dbuser1 with password 'test123' valid until '2020-03-08';
+CREATE ROLE
+
+CREATE USER WITH SUPER USER PRIVILEGE
+
+psqldb=# create user test_dbuser3 with password 'test123' CREATEDB SUPERUSER;
+
+CREATE ROLE
+
+VIEW USERS:
+
+psqldb=# select usename,valuntil,usecreatedb from pg_shadow;
+
+psqldb=# select usename,usesuper,valuntil from pg_user;
+
+psqldb=# \du+
+
+DROP USER:
+
+drop user DB_user1;
