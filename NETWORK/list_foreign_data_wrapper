@@ -1,0 +1,9 @@
+postgres=# \dew
+List of foreign-data wrappers
+Name.         | Owner        | Handler            | Validator
+--------------+--------------+--------------------+--------------------------
+dblink_fdw    | enterprisedb | -                  | dblink_fdw_validator
+libpq_dblink  | enterprisedb | libpq_fdw_handler  | edb_dblink_fdw_validator
+oci_dblink    | enterprisedb | oci_fdw_handler.   | edb_dblink_fdw_validator
+oracle_fdw.   | enterprisedb | oracle_fdw_handler | oracle_fdw_validator
+(4 rows)
