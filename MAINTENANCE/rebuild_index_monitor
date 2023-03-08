@@ -1,0 +1,25 @@
+psqldb=# SELECT a.query,p.phase, p.blocks_total,p.blocks_done,p.tuples_total, p.tuples_done 
+            FROM pg_stat_progress_create_index p JOIN pg_stat_activity a ON p.pid = a.pid;
+
+-[ RECORD 1 ]+-------------------------------
+query        | reindex index test_idx;
+phase        | building index: scanning table
+blocks_total | 61281
+blocks_done  | 15331
+tuples_total | 0
+tuples_done  | 0
+
+(or)
+
+psqldb=# select pid,datname,command,phase,tuples_total,tuples_done,partitions_total,partitions_done 
+             from pg_stat_progress_create_index;
+
+-[ RECORD 1 ]----+-------------------------------
+pid.              | 14944
+datname           | postgres
+command           | REINDEX
+phase             | building index: scanning table
+tuples_total      | 0
+tuples_done       | 0
+partitions_total  | 0
+partitions_done   | 0
