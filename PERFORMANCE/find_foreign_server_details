@@ -1,0 +1,10 @@
+postgres=# \des+
+List of foreign servers
+Name  | Owner | Foreign-data wrapper | Access privileges | Type | Version | FDW options | Description
+------+-------+----------------------+-------------------+------+---------+-------------+-------------
+(0 rows)
+
+postgres=# select srvname,srvowner,srvoptions,fdwname,srvversion,srvtype from pg_foreign_server join pg_foreign_data_wrapper b on b.oid=srvfdw;
+srvname  | srvowner | srvoptions | fdwname | srvversion | srvtype
+---------+----------+------------+---------+------------+---------
+(0 rows)
