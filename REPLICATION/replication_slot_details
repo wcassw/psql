@@ -1,0 +1,13 @@
+-- Check existing replication slot details
+
+postgres# SELECT redo_lsn, slot_name,restart_lsn, active,
+round((redo_lsn-restart_lsn) / 1024 / 1024 / 1024, 2) AS GB_lag
+FROM pg_control_checkpoint(), pg_replication_slots;
+
+-- Create replication slots
+
+postgres#SELECT pg_create_physical_replication_slot('slot_one');
+
+-- Drop unused replication slots
+
+postgres=# SELECT pg_drop_replication_slot('slot_one');
