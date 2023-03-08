@@ -1,0 +1,9 @@
+-- Find lag in bytes( run on standby)
+
+postgres# SELECT pg_wal_lsn_diff(sent_lsn, replay_lsn) from pg_stat_replication;
+
+--- Find lag in seconds( run on standby)
+
+postgres# SELECT CASE WHEN pg_last_wal_receive_lsn() = pg_last_wal_replay_lsn()
+   THEN 0 ELSE
+EXTRACT (EPOCH FROM now() - pg_last_xact_replay_timestamp()) END AS lag_seconds;
