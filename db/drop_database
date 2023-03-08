@@ -4,7 +4,13 @@ Note - while dropping a database, you need to connect to a database other than t
 postgres=# \conninfo
 You are connected to database "postgres" as user "postgres" on host "localhost" at port "5432".
 
-postgres#drop database "PSQLDB";
+Check Activity
+postgres=# select application_name,client_hostname,pid,usename from pg_stat_activity where datname='PSQLDB';
+
+Kill session
+select pg_terminate_backend(pid) from pg_stat_activity where pid='11111';
+
+postgres# drop database "PSQLDB";
 
 -- Drop database using dropdb os utility
 
@@ -15,3 +21,12 @@ postgres$ ./dropdb -e "PSQLDB"
 Password:
 SELECT pg_catalog.set_config('search_path', '', false)
 DROP DATABASE "PSQLDB";
+
+postgres=# \list
+List of databases
+Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
+-----------+----------+----------+---------+-------+---------
+...
+
+Lastly.
+drop the database using pgadmin gui tool.
