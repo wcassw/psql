@@ -1,0 +1,8 @@
+Bydefault autocommit is set to on in postgres. You can check the setting .
+
+postgres# \echo :AUTOCOMMIT;
+ON;
+
+At session level you can change the autocommit setting :
+
+postgres# \set AUTOCOMMIT OFF
