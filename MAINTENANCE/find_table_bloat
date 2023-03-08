@@ -1,0 +1,21 @@
+-- Create the pgstattuple extension:
+
+postgres=# create extension pgstattuple;
+CREATE EXTENSION
+
+-- bloating percentage of the table "test":
+
+postgres=# SELECT pg_size_pretty(pg_relation_size('test')) as table_size,(pgstattuple('test')).dead_tuple_percent;
+table_size. | dead_tuple_percent
+------------+--------------------
+1408 kB     | 0
+(1 row)
+
+-- bloating percentage of index "test_x_idx":
+
+select pg_relation_size('test_x_idx') as index_size, 100-(pgstatindex('test_x_idx')).avg_leaf_density as bloat_ratio;
+
+index_size. | bloat_ratio
+------------+--------------------
+1008 kB     | 0
+(1 row)
