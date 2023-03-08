@@ -1,0 +1,20 @@
+-- Monitor query execution time
+
+select substr(query,1,100) query,calls,min_time/1000 "min_time(in sec)" , max_time/1000 "max_time(in sec)", 
+       mean_time/1000 "avg_time(in sec)", rows 
+ from pg_stat_statements order by mean_time desc;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+NOTE:
+
+If pg_stat_statements is not available in your database, then activate using below:
+-- Add below parameters in postgres.conf file and restart the postgres cluster
+
+shared_preload_libraries = 'pg_stat_statements'
+pg_stat_statements.track = all
+
+$ sudo service postgresql restart
+
+-- Now create extension:
+
+psqldb=# create extension pg_stat_statements;
