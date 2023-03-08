@@ -1,0 +1,27 @@
+VACUUM - >  REMOVES DEAD ROWS, AND MARK THEM FOR REUSE, BUT IT DOESN’T RETURN THE SPACE TO ORACLE,. 
+             IT DOESN'T NEED EXCLUSIVE LOCK ON THE TABLE.
+-------------------------------------------------------------------------
+vacuum a table:
+psqldb=# vacuum dbatest.emptab;
+VACUUM
+
+both vacuum and analyze:
+
+psqldb=# vacuum analyze dbatest.emptab;
+VACUUM
+
+with verbose:
+
+psqldb# vacuum verbose analyze dbatest.emptab;
+
+Monitor vacuum process( if vacuum process runs for a long time)
+
+psqldb#select * from pg_stat_progress_vacuum;
+
+Check vacuum related information for the table
+
+psqldb=# select schemaname,relname,last_vacuum,vacuum_count from pg_stat_user_tables where relname='emptab';
+schemaname  | relname | last_vacuum                      | vacuum_count
+------------+---------+----------------------------------+--------------
+pdbtest     | emptab  | 2020-03-21 18:35:34.801402+05:30 | 2
+(1 row)
