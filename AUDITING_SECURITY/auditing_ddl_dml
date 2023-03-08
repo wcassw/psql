@@ -1,0 +1,33 @@
+-- Check auditing setting :
+
+postgres=# show log_statement;
+log_statement
+---------------
+none
+
+-- For logging all ddl activites:
+
+postgres=# alter system set log_statement=ddl;
+ALTER SYSTEM
+postgres=# select pg_reload_conf();
+pg_reload_conf
+----------------
+t
+
+-- For logging all DDL DML activities:
+
+postgres=# alter system set log_statement=mod;
+ALTER SYSTEM
+postgres=# select pg_reload_conf();
+pg_reload_conf
+----------------
+t
+
+-- For logging all statement( i.e ddl , dml and even select statements)
+
+postgres=# alter system set log_statement='all';
+ALTER SYSTEM
+postgres=# select pg_reload_conf();
+pg_reload_conf
+----------------
+t
