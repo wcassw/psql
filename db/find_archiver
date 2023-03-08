@@ -1,0 +1,9 @@
+postgres# select * from pg_stat_archiver;
+-[ RECORD 1 ]------+---------------------------------
+archived_count     | 0
+last_archived_wal  |
+last_archived_time |
+failed_count.      | 0
+last_failed_wal.   |
+last_failed_time   |
+stats_reset        | 26-MAR-20 11:13:08.540237 +05:00
