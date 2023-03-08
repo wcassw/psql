@@ -1,0 +1,7 @@
+postgres=# \deu+
+
+List of user mappings
+Server.    | User name    | FDW options
+-----------+--------------+----------------------------------------
+pg_remote  | enterprisedb | ("user" 'dba_wsc', password 'dba_wsc')
+(1 row)
