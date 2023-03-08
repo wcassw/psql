@@ -1,0 +1,28 @@
+-- List down all the wal files present in pg_wal
+
+postgres=# select * from pg_ls_waldir();
+name                     | size     | modification
+------------------------------------------+----------+---------------------------
+0000000100000079000000D5 | 16777216 | 20-MAR-20 20:51:26 +03:00
+0000000100000079000000D8 | 16777216 | 20-MAR-20 20:39:33 +03:00
+0000000100000079000000D6 | 16777216 | 20-MAR-20 20:07:40 +03:00
+0000000100000079000000D9 | 16777216 | 20-MAR-20 20:47:21 +03:00
+0000000100000079000000D7 | 16777216 | 20-MAR-20 20:21:45 +03:00
+00000001000000790000005C.00005BC8.backup | 323 | 21-MAR-20 10:14:40 +03:00
+(6 rows)
+
+-- Find total size of wal:
+
+postgres=# select sum(size) from pg_ls_waldir();
+sum
+----------
+83886403
+(1 row)
+
+-- Find current wal file lsn:
+
+postgres=# select pg_current_wal_insert_lsn(),pg_current_wal_lsn();
+pg_current_wal_insert_lsn  | pg_current_wal_lsn
+---------------------------+--------------------
+79/D5980480                | 79/D5980480
+(1 row)
