@@ -1,0 +1,36 @@
+--- It wil find the indexes present on a table 'test'
+
+postgres=# select * from pg_indexes where tablename='test';
+schemaname  | tablename | indexname | tablespace  | indexdef
+------------+-----------+-----------+-------------+----------------------------------------------------------
+public.     | test      | tes_idx1  | ts_postgres | CREATE INDEX tes_idx1 ON public.test USING btree (datid)
+(1 row)
+
+-- All indexes present in database:
+
+postgres#select * from pg_indexes
+
+-- It will show all index details including size:
+
+postgres=# \di+
+List of relations
+Schema  | Name     | Type  | Owner    | Table  | Size   | Description
+--------+----------+-------+----------+--------+--------+-------------
+public  | tes_idx  | index | postgres | test56 | 64 kB |
+public  | tes_idx1 | index | postgres | test   | 472 MB |
+(2 rows)
+
+-- Find indexes with respective column name for table( here table name is test)
+
+REFERENCE - https://stackoverflow.com/questions/2204058/list-columns-with-indexes-in-postgresql
+select t.relname as table_name, i.relname as index_name, 
+       array_to_string(array_agg(a.attname), ', ') as column_names
+  from pg_class t, pg_class i, pg_index ix, pg_attribute a
+ where t.oid = ix.indrelid
+  and i.oid = ix.indexrelid
+  and a.attrelid = t.oid
+  and a.attnum = ANY(ix.indkey)
+  and t.relkind = 'r'
+  and t.relname ='test'
+group by t.relname, i.relname
+order by t.relname, i.relname;
