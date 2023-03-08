@@ -1,0 +1,22 @@
+psqldb=# show server_version;
+server_version
+----------------
+12.13
+(1 row)
+
+psqldb=# select version ();
+version
+----------------------------------------------------------------------------------------------
+PostgreSQL 12.13 on ......, compiled by ...... 
+(1 row)
+
+$ cd /Library/PostgreSQL/12/bin
+
+$ ./postgres -V
+postgres (PostgreSQL) 12.13
+
+-- PG_VERSION file is under data directory
+$ cd /Library/PostgreSQL/12/data
+
+$ cat PG_VERSION
+12
