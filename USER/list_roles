@@ -1,0 +1,19 @@
+postgres=# select rolname,rolcanlogin,rolvaliduntil from pg_roles;
+rolname               | rolcanlogin | rolvaliduntil
+----------------------+-------------+---------------------------
+pg_monitor            | f           |
+pg_read_all_settings  | f           |
+pg_read_all_stats     | f           |
+pg_stat_scan_tables   | f           |
+pg_signal_backend     | f           |
+postgres              | t           |
+test_dbuser1          | f           | 2020-03-08 00:00:00+05:30
+
+ 
+
+rolcanlogin - > If true mean they are role as well as user
+                If false mean they are only role( they cannot login)
+
+NOTE - > In postgres users are bydefault role, but roles are not bydefault user. i.e
+
+Bydefault user come with login privilege, where as roles don’t come with login privilege.
