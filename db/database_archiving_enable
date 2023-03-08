@@ -1,0 +1,24 @@
+1. Create directory for archiving:
+
+mkdir -p /Library/PostgreSQL/12/data/archive/
+
+2. Update the postgres.conf file with below values
+
+wal_level = replica
+archive_mode = on
+max_wal_senders=1
+archive_command= 'test ! -f /Library/PostgreSQL/12/data/archive/%f && cp %p /Library/PostgreSQL/12/data/archive/%f'
+
+3. Restart the postgres servers
+
+export PGDATA=/Library/PostgreSQL/12/data
+pg_ctl stop
+pg_ctl start
+
+3. Check archive status:
+postgres=# select name,setting from pg_settings where name like 'archive%';
+name             | setting
+-----------------+--------------------------------------------------------------------------------------------------
+archive_command  | test ! -f /Library/PostgreSQL/12/data/archive/%f && cp %p /Library/PostgreSQL/12/data/archive/%f
+archive_mode     | on
+archive_timeout  |  0
