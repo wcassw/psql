@@ -1,0 +1,5 @@
+-- set search_path for a user in particular db:
+postgres# alter user prod_user in database "EDB" set search_path="$user", public, prim_db;
+
+-- set search_path for a user in postgres cluster( all dbs)
+postgres=# alter user prod_user set search_path="$user", public, prim_db;
