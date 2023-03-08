@@ -1,0 +1,36 @@
+VIEW DEFAULT TEMP TABLESPACE:
+psqldb=# SELECT name, setting FROM pg_settings where name='temp_tablespaces';
+name | setting
+------------------+---------
+temp_tablespaces |
+(1 row)
+
+psqldb=# show temp_tablespaces
+psqldb-# ;
+temp_tablespaces
+------------------
+
+(1 row)
+
+CHANGE DEFAULT TEMP TABLESPACE
+
+postgres=# alter system set temp_tablespaces=TS_TEMP;
+ALTER SYSTEM
+
+postgres=# select pg_reload_conf();
+pg_reload_conf
+----------------
+t
+(1 row)
+
+postgres=# show temp_tablespaces;
+temp_tablespaces
+------------------
+ts_temp
+(1 row)
+
+postgres=# SELECT name, setting FROM pg_settings where name='temp_tablespaces';
+name | setting
+------------------+---------
+temp_tablespaces | ts_temp
+(1 row)
