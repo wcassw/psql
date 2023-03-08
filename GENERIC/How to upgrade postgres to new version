@@ -1,0 +1,471 @@
+1. First download and install the postgres 14
+https://yum.postgresql.org/rpmchart/
+
+-rwxr-xr-x 1 root root 1556440 Apr 26 15:01 postgresql14-14.2-1PGDG.rhel7.x86_64.rpm
+-rwxr-xr-x 1 root root  698212 Apr 26 15:01 postgresql14-contrib-14.2-1PGDG.rhel7.x86_64.rpm
+-rwxr-xr-x 1 root root  273192 Apr 26 15:01 postgresql14-libs-14.2-1PGDG.rhel7.x86_64.rpm
+-rwxr-xr-x 1 root root 5783224 Apr 26 15:01 postgresql14-server-14.2-1PGDG.rhel7.x86_64.rpm
+
+Make sure to install the rpms in below sequence only. Otherwise you will dependency errors.
+
+# yum install postgresql14-libs-14.2-1PGDG.rhel7.x86_64.rpm
+# yum install postgresql14-14.2-1PGDG.rhel7.x86_64.rpm
+# yum install postgresql14-server-14.2-1PGDG.rhel7.x86_64.rpm
+# yum install postgresql14-contrib-14.2-1PGDG.rhel7.x86_64.rpm
+
+2. Initialise the postgres 14 version cluster.
+$ /usr/pgsql-14/bin/initdb -D /var/lib/pgsql/14/data
+...
+Success. You can now start the database server using:
+
+    ./pg_ctl -D /var/lib/pgsql/14/data -l logfile start
+
+3. Run the postgres upgrade with check option.
+
+existing data_directory(PG12) – > /var/lib/pgsql/12/data
+existing postgres binary(PG12) – > /usr/pgsql-12/bin
+new data_directory(PG14) – > /var/lib/pgsql/14/data
+new postgres binary(PG14) – > /usr/pgsql-14/bin
+
+It will not do the actual upgrade , it will do the precheck.
+
+$ pwd
+/usr/pgsql-14/bin
+
+$  /usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql/12/data -D /var/lib/pgsql/14/data -b /usr/pgsql-12/bin -B /usr/pgsql-14/bin  -c
+
+could not open log file "pg_upgrade_internal.log": Permission denied
+Failure, exiting
+
+-- To avoid this error, go to /tmp location and run teh command again.
+
+$ pwd
+/usr/pgsql-14/bin
+$ cd /tmp
+$ /usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql/12/data -D /var/lib/pgsql/14/data -b /usr/pgsql-12/bin -B /usr/pgsql-14/bin  -c
+
+-- Alternatively you can mention --link option
+
+$ /usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql/12/data -D /var/lib/pgsql/14/data -b /usr/pgsql-12/bin -B /usr/pgsql-14/bin --link --check
+
+4.Run the actual upgrade:
+
+You need to shutdown the existing cluster before the starting upgrade, otherwise below error.
+
+cd /tmp
+$  /usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql/12/data -D /var/lib/pgsql/14/data -b /usr/pgsql-12/bin -B /usr/pgsql-14/bin --link
+
+$ /usr/pgsql-12/bin/pg_ctl stop -D /var/lib/pgsql/12/data
+
+$  /usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql/12/data -D /var/lib/pgsql/14/data -b /usr/pgsql-12/bin -B /usr/pgsql-14/bin --link
+
+Upgrade Complete
+----------------
+Optimizer statistics are not transferred by pg_upgrade.
+Once you start the new server, consider running:
+    /usr/pgsql-14/bin/vacuumdb --all --analyze-in-stages
+
+Running this script will delete the old cluster's data files:
+    ./delete_old_cluster.sh
+
+5. Start the new postgres cluster.
+$ /usr/pgsql-14/bin/pg_ctl start -D /var/lib/pgsql/14/data
+
+postgres-# \list+
+postgres=# select version();
+
+Once your upgrade is successful, you can delete your old cluster using the script.delete_old_cluster.sh
+
+Home / POSTGRES / How to upgrade postgres to new version
+How to upgrade postgres to new version
+262 views 7 min , 16 sec read 0
+
+In this article, we will explain , How to upgrade from postgres 12 to postgres 14 version. This will be considered as major upgrade.
+
+Minor upgrade is like upgrading from 9.6 version to 9.7 version. For minor upgrade, You just need to upgrade the rpms. Which We will do that in another article.
+1. First download and install the postgres 14
+
+https://yum.postgresql.org/rpmchart/
+
+
+-rwxr-xr-x 1 root root 1556440 Apr 26 15:01 postgresql14-14.2-1PGDG.rhel7.x86_64.rpm
+-rwxr-xr-x 1 root root  698212 Apr 26 15:01 postgresql14-contrib-14.2-1PGDG.rhel7.x86_64.rpm
+-rwxr-xr-x 1 root root  273192 Apr 26 15:01 postgresql14-libs-14.2-1PGDG.rhel7.x86_64.rpm
+-rwxr-xr-x 1 root root 5783224 Apr 26 15:01 postgresql14-server-14.2-1PGDG.rhel7.x86_64.rpm
+
+Make sure to install the rpms in below sequence only. Otherwise you will dependency errors.
+
+[root@dbahost14 pg_13]# yum install postgresql14-libs-14.2-1PGDG.rhel7.x86_64.rpm
+Loaded plugins: langpacks, product-id, search-disabled-repos, subscription-manager
+Examining postgresql14-libs-14.2-1PGDG.rhel7.x86_64.rpm: postgresql14-libs-14.2-1PGDG.rhel7.x86_64
+Marking postgresql14-libs-14.2-1PGDG.rhel7.x86_64.rpm to be installed
+Resolving Dependencies
+--> Running transaction check
+---> Package postgresql14-libs.x86_64 0:14.2-1PGDG.rhel7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=================================================================================================================================================================================
+ Package                                Arch                        Version                                Repository                                                       Size
+=================================================================================================================================================================================
+Installing:
+ postgresql14-libs                      x86_64                      14.2-1PGDG.rhel7                       /postgresql14-libs-14.2-1PGDG.rhel7.x86_64                      919 k
+
+Transaction Summary
+=================================================================================================================================================================================
+Install  1 Package
+
+Total size: 919 k
+Installed size: 919 k
+Is this ok [y/d/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+Warning: RPMDB altered outside of yum.
+  Installing : postgresql14-libs-14.2-1PGDG.rhel7.x86_64                                                                                                                     1/1
+  Verifying  : postgresql14-libs-14.2-1PGDG.rhel7.x86_64                                                                                                                     1/1
+rhel-7-server-rpms/7Server/x86_64/productid                                                                                                               | 2.1 kB  00:00:00
+
+Installed:
+  postgresql14-libs.x86_64 0:14.2-1PGDG.rhel7
+
+Complete!
+[root@dbahost14 pg_12]# yum install postgresql14-14.2-1PGDG.rhel7.x86_64.rpm
+Loaded plugins: langpacks, product-id, search-disabled-repos, subscription-manager
+Examining postgresql14-14.2-1PGDG.rhel7.x86_64.rpm: postgresql14-14.2-1PGDG.rhel7.x86_64
+Marking postgresql14-14.2-1PGDG.rhel7.x86_64.rpm to be installed
+Resolving Dependencies
+--> Running transaction check
+---> Package postgresql14.x86_64 0:14.2-1PGDG.rhel7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=================================================================================================================================================================================
+ Package                             Arch                          Version                                    Repository                                                    Size
+=================================================================================================================================================================================
+Installing:
+ postgresql14                        x86_64                        14.2-1PGDG.rhel7                           /postgresql14-14.2-1PGDG.rhel7.x86_64                        7.8 M
+
+Transaction Summary
+=================================================================================================================================================================================
+Install  1 Package
+
+Total size: 7.8 M
+Installed size: 7.8 M
+Is this ok [y/d/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : postgresql14-14.2-1PGDG.rhel7.x86_64                                                                                                                          1/1
+failed to link /usr/bin/psql -> /etc/alternatives/pgsql-psql: /usr/bin/psql exists and it is not a symlink
+failed to link /usr/bin/clusterdb -> /etc/alternatives/pgsql-clusterdb: /usr/bin/clusterdb exists and it is not a symlink
+failed to link /usr/bin/createdb -> /etc/alternatives/pgsql-createdb: /usr/bin/createdb exists and it is not a symlink
+failed to link /usr/bin/createuser -> /etc/alternatives/pgsql-createuser: /usr/bin/createuser exists and it is not a symlink
+failed to link /usr/bin/dropdb -> /etc/alternatives/pgsql-dropdb: /usr/bin/dropdb exists and it is not a symlink
+failed to link /usr/bin/dropuser -> /etc/alternatives/pgsql-dropuser: /usr/bin/dropuser exists and it is not a symlink
+failed to link /usr/bin/pg_dump -> /etc/alternatives/pgsql-pg_dump: /usr/bin/pg_dump exists and it is not a symlink
+failed to link /usr/bin/pg_dumpall -> /etc/alternatives/pgsql-pg_dumpall: /usr/bin/pg_dumpall exists and it is not a symlink
+failed to link /usr/bin/pg_restore -> /etc/alternatives/pgsql-pg_restore: /usr/bin/pg_restore exists and it is not a symlink
+failed to link /usr/bin/reindexdb -> /etc/alternatives/pgsql-reindexdb: /usr/bin/reindexdb exists and it is not a symlink
+failed to link /usr/bin/vacuumdb -> /etc/alternatives/pgsql-vacuumdb: /usr/bin/vacuumdb exists and it is not a symlink
+  Verifying  : postgresql14-14.2-1PGDG.rhel7.x86_64                                                                                                                          1/1
+
+Installed:
+  postgresql14.x86_64 0:14.2-1PGDG.rhel7
+
+Complete!
+
+[root@dbahost14 pg_12]# yum install postgresql14-server-14.2-1PGDG.rhel7.x86_64.rpm
+Loaded plugins: langpacks, product-id, search-disabled-repos, subscription-manager
+Examining postgresql14-server-14.2-1PGDG.rhel7.x86_64.rpm: postgresql14-server-14.2-1PGDG.rhel7.x86_64
+Marking postgresql14-server-14.2-1PGDG.rhel7.x86_64.rpm to be installed
+Resolving Dependencies
+--> Running transaction check
+---> Package postgresql14-server.x86_64 0:14.2-1PGDG.rhel7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=================================================================================================================================================================================
+ Package                                 Arch                       Version                               Repository                                                        Size
+=================================================================================================================================================================================
+Installing:
+ postgresql14-server                     x86_64                     14.2-1PGDG.rhel7                      /postgresql14-server-14.2-1PGDG.rhel7.x86_64                      22 M
+
+Transaction Summary
+=================================================================================================================================================================================
+Install  1 Package
+
+Total size: 22 M
+Installed size: 22 M
+Is this ok [y/d/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : postgresql14-server-14.2-1PGDG.rhel7.x86_64                                                                                                                   1/1
+  Verifying  : postgresql14-server-14.2-1PGDG.rhel7.x86_64                                                                                                                   1/1
+
+Installed:
+  postgresql14-server.x86_64 0:14.2-1PGDG.rhel7
+
+Complete!
+[root@dbahost14 pg_12]# yum install postgresql14-contrib-14.2-1PGDG.rhel7.x86_64.rpm
+Loaded plugins: langpacks, product-id, search-disabled-repos, subscription-manager
+Examining postgresql14-contrib-14.2-1PGDG.rhel7.x86_64.rpm: postgresql14-contrib-14.2-1PGDG.rhel7.x86_64
+Marking postgresql14-contrib-14.2-1PGDG.rhel7.x86_64.rpm to be installed
+Resolving Dependencies
+--> Running transaction check
+---> Package postgresql14-contrib.x86_64 0:14.2-1PGDG.rhel7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=================================================================================================================================================================================
+ Package                                 Arch                      Version                                Repository                                                        Size
+=================================================================================================================================================================================
+Installing:
+ postgresql14-contrib                    x86_64                    14.2-1PGDG.rhel7                       /postgresql14-contrib-14.2-1PGDG.rhel7.x86_64                    2.4 M
+
+Transaction Summary
+=================================================================================================================================================================================
+Install  1 Package
+
+Total size: 2.4 M
+Installed size: 2.4 M
+Is this ok [y/d/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : postgresql14-contrib-14.2-1PGDG.rhel7.x86_64                                                                                                                  1/1
+  Verifying  : postgresql14-contrib-14.2-1PGDG.rhel7.x86_64                                                                                                                  1/1
+
+Installed:
+  postgresql14-contrib.x86_64 0:14.2-1PGDG.rhel7
+
+Complete!
+[root@dbahost14 pg_12]#
+
+2. Initialise the postgres 14 version cluster.
+
+-bash-4.2$ /usr/pgsql-14/bin/initdb -D /var/lib/pgsql/14/data
+The files belonging to this database system will be owned by user "postgres".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "en_US.UTF-8".
+The default database encoding has accordingly been set to "UTF8".
+The default text search configuration will be set to "english".
+
+Data page checksums are disabled.
+
+fixing permissions on existing directory /var/lib/pgsql/14/data ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default max_connections ... 100
+selecting default shared_buffers ... 128MB
+selecting default time zone ... Asia/Riyadh
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+initdb: warning: enabling "trust" authentication for local connections
+You can change this by editing pg_hba.conf or using the option -A, or
+--auth-local and --auth-host, the next time you run initdb.
+
+Success. You can now start the database server using:
+
+    ./pg_ctl -D /var/lib/pgsql/14/data -l logfile start
+
+
+3. Run the postgres upgrade with check option.
+
+existing data_directory(PG12) – > /var/lib/pgsql/12/data
+existing postgres binary(PG12) – > /usr/pgsql-12/bin
+new data_directory(PG14) – > /var/lib/pgsql/14/data
+new postgres binary(PG14) – > /usr/pgsql-14/bin
+
+It will not do the actual upgrade , it will do the precheck.
+
+-bash-4.2$ pwd
+/usr/pgsql-14/bin
+-bash-4.2$  /usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql/12/data -D /var/lib/pgsql/14/data -b /usr/pgsql-12/bin -B /usr/pgsql-14/bin  -c
+
+could not open log file "pg_upgrade_internal.log": Permission denied
+Failure, exiting
+
+
+-- To avoid this error, go to /tmp location and run teh command again.
+-bash-4.2$ pwd
+/usr/pgsql-14/bin
+-bash-4.2$ cd /tmp
+-bash-4.2$ /usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql/12/data -D /var/lib/pgsql/14/data -b /usr/pgsql-12/bin -B /usr/pgsql-14/bin  -c
+Performing Consistency Checks on Old Live Server
+------------------------------------------------
+Checking cluster versions                                   ok
+Checking database user is the install user                  ok
+Checking database connection settings                       ok
+Checking for prepared transactions                          ok
+Checking for system-defined composite types in user tables  ok
+Checking for reg* data types in user tables                 ok
+Checking for contrib/isn with bigint-passing mismatch       ok
+Checking for user-defined encoding conversions              ok
+Checking for user-defined postfix operators                 ok
+Checking for presence of required libraries                 ok
+Checking database user is the install user                  ok
+Checking for prepared transactions                          ok
+Checking for new cluster tablespace directories             ok
+
+*Clusters are compatible*
+
+-- Alternatively you can mention --link option
+
+-bash-4.2$ /usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql/12/data -D /var/lib/pgsql/14/data -b /usr/pgsql-12/bin -B /usr/pgsql-14/bin --link --check
+Performing Consistency Checks on Old Live Server
+------------------------------------------------
+Checking cluster versions                                   ok
+Checking database user is the install user                  ok
+Checking database connection settings                       ok
+Checking for prepared transactions                          ok
+Checking for system-defined composite types in user tables  ok
+Checking for reg* data types in user tables                 ok
+Checking for contrib/isn with bigint-passing mismatch       ok
+Checking for user-defined encoding conversions              ok
+Checking for user-defined postfix operators                 ok
+Checking for presence of required libraries                 ok
+Checking database user is the install user                  ok
+Checking for prepared transactions                          ok
+Checking for new cluster tablespace directories             ok
+
+*Clusters are compatible*
+
+    NOTE – > If you not using link option, then if your postgres cluster size is of 100 GB, then those 100GB will be copied to the new cluster. But if you are using link option, then it will just create symobolic link, Instead of copying
+
+ 
+4.Run the actual upgrade:
+
+You need to shutdown the existing cluster before the starting upgrade, otherwise below error.
+
+cd /tmp
+-bash-4.2$  /usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql/12/data -D /var/lib/pgsql/14/data -b /usr/pgsql-12/bin -B /usr/pgsql-14/bin --link
+
+There seems to be a postmaster servicing the old cluster.
+Please shutdown that postmaster and try again.
+Failure, exiting
+
+
+-bash-4.2$ /usr/pgsql-12/bin/pg_ctl stop -D /var/lib/pgsql/12/data
+waiting for server to shut down.... done
+server stopped
+
+
+-bash-4.2$  /usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql/12/data -D /var/lib/pgsql/14/data -b /usr/pgsql-12/bin -B /usr/pgsql-14/bin --link
+Performing Consistency Checks
+-----------------------------
+Checking cluster versions                                   ok
+Checking database user is the install user                  ok
+Checking database connection settings                       ok
+Checking for prepared transactions                          ok
+Checking for system-defined composite types in user tables  ok
+Checking for reg* data types in user tables                 ok
+Checking for contrib/isn with bigint-passing mismatch       ok
+Checking for user-defined encoding conversions              ok
+Checking for user-defined postfix operators                 ok
+Creating dump of global objects                             ok
+Creating dump of database schemas
+                                                            ok
+Checking for presence of required libraries                 ok
+Checking database user is the install user                  ok
+Checking for prepared transactions                          ok
+Checking for new cluster tablespace directories             ok
+
+If pg_upgrade fails after this point, you must re-initdb the
+new cluster before continuing.
+
+Performing Upgrade
+------------------
+Analyzing all rows in the new cluster                       ok
+Freezing all rows in the new cluster                        ok
+Deleting files from new pg_xact                             ok
+Copying old pg_xact to new server                           ok
+Setting oldest XID for new cluster                          ok
+Setting next transaction ID and epoch for new cluster       ok
+Deleting files from new pg_multixact/offsets                ok
+Copying old pg_multixact/offsets to new server              ok
+Deleting files from new pg_multixact/members                ok
+Copying old pg_multixact/members to new server              ok
+Setting next multixact ID and offset for new cluster        ok
+Resetting WAL archives                                      ok
+Setting frozenxid and minmxid counters in new cluster       ok
+Restoring global objects in the new cluster                 ok
+Restoring database schemas in the new cluster
+                                                            ok
+Adding ".old" suffix to old global/pg_control               ok
+
+If you want to start the old cluster, you will need to remove
+the ".old" suffix from /var/lib/pgsql/12/data/global/pg_control.old.
+Because "link" mode was used, the old cluster cannot be safely
+started once the new cluster has been started.
+
+Linking user relation files
+                                                            ok
+Setting next OID for new cluster                            ok
+Sync data directory to disk                                 ok
+Creating script to delete old cluster                       ok
+Checking for extension updates                              ok
+
+Upgrade Complete
+----------------
+Optimizer statistics are not transferred by pg_upgrade.
+Once you start the new server, consider running:
+    /usr/pgsql-14/bin/vacuumdb --all --analyze-in-stages
+
+Running this script will delete the old cluster's data files:
+    ./delete_old_cluster.sh
+-bash-4.2$
+
+5. Start the new postgres cluster.
+
+
+-bash-4.2$ /usr/pgsql-14/bin/pg_ctl start -D /var/lib/pgsql/14/data
+waiting for server to start....2022-04-26 22:51:53.194 +03 [18271] LOG:  redirecting log output to logging collector process
+2022-04-26 22:51:53.194 +03 [18271] HINT:  Future log output will appear in directory "log".
+ done
+server started
+
+
+postgres-# \list+
+                                                                    List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   |  Size   | Tablespace |                Description
+-----------+----------+----------+-------------+-------------+-----------------------+---------+------------+--------------------------------------------
+ mig_db    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |                       | 141 MB  | lm_ts      |
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |                       | 8785 kB | pg_default | default administrative connection database
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +| 8633 kB | pg_default | unmodifiable empty database
+           |          |          |             |             | postgres=CTc/postgres |         |            |
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | postgres=CTc/postgres+| 8633 kB | pg_default | default template for new databases
+           |          |          |             |             | =c/postgres           |         |            |
+(4 rows)
+
+
+
+
+postgres=# select version();
+                                                 version
+---------------------------------------------------------------------------------------------------------
+ PostgreSQL 14.2 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44), 64-bit
+(1 row)
+
+
+Once your upgrade is successful, you can delete your old cluster using the script.delete_old_cluster.sh
+
+./delete_old_cluster.sh
+
