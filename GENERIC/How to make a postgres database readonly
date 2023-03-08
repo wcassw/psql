@@ -1,0 +1,62 @@
+In postgres you can make a particular database or all databases of a postgres cluster.
+
+default_transaction_read_only parameter controls whether database is in read only or read write .
+
+default_transaction_read_only -> on ( for read only )
+default_transaction_read_only -> off ( for read write )
+For making single db read only.( DB_NAME – > edbstore)
+
+–connect to database other than the edbstore ( here i connected to default postgres db)
+
+[enterprisedb@localhost ~]$ psql -d postgres
+psql (12.4.5)
+Type "help" for help.
+
+postgres=# \conninfo
+You are connected to database "postgres" as user "enterprisedb" via socket in "/tmp" at port "5444".
+
+
+postgres=# alter database edbstore set default_transaction_read_only=on;
+ALTER DATABASE
+
+— Now restart the postgres cluster(either using pg_ctl or service_name)
+
+[root@localhost ~]# systemctl stop edb-as-12
+[root@localhost ~]# systemctl start edb-as-12
+
+— Now login to database and check:
+
+=# \conninfo
+You are connected to database "psqldb" as user "enterprisedb" via socket in "/tmp" at port "5444".
+psqldb=# create table test as select  * from pg_settings;
+ERROR:  cannot execute CREATE TABLE AS in a read-only transaction
+
+We can see it is not allowing write operations.
+
+Now if you wish to remove the database from read only mode, then
+
+postgres=# \conninfo
+You are connected to database "postgres" as user "enterprisedb" via socket in "/tmp" at port "5444".
+
+postgres=# alter database psqldb set default_transaction_read_only=off;
+ALTER DATABASE
+
+[root@localhost ~]# systemctl stop edb-as-12
+[root@localhost ~]# systemctl start edb-as-12
+
+
+For making all the databases of the postgres cluster read only:
+
+postgres=# show default_transaction_read_only;
+ default_transaction_read_only 
+-------------------------------
+ off
+(1 row)
+
+postgres=# alter system set default_transaction_read_only=on;
+ALTER SYSTEM
+
+-- Restart the pg cluster:
+[root@localhost ~]# systemctl stop edb-as-12
+[root@localhost ~]# systemctl start edb-as-12
+ 
