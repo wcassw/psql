@@ -1,0 +1,10 @@
+Move table/index to different tablespace
+
+-- move table to different tablespace
+psqldb=# alter table TEST3 set tablespace ts_psqldb;
+ALTER TABLE
+
+-- Move index to different tablespace
+
+psqldb=# alter index TEST_ind set tablespace ts_psqldb;
+ALTER TABLE
