@@ -1,0 +1,25 @@
+- Enable audit for connection and disconnection to postgres.
+
+postgres=# select name,setting from pg_settings where name in ('log_disconnections','log_connections');
+name                | setting
+--------------------+---------
+log_connections     | off
+log_disconnections  | off
+
+postgres=# alter system set log_disconnections=off;
+ALTER SYSTEM
+
+postgres=# alter system set log_connections=on;
+ALTER SYSTEM
+
+postgres=# select pg_reload_conf();
+pg_reload_conf
+----------------
+t
+
+Now all log on and log off will logged in the log file.
+
+<<<<<<<<< cd /Library/PostgreSQL/12/data/log/ >>>>>>>
+2020-03-06 10:51:39.042 IST [10212] LOG: connection received: host=[local]
+2020-03-06 10:51:53.416 IST [10215] LOG: connection received: host=[local]
+2020-03-06 10:51:53.420 IST [10215] LOG: connection authorized: user=postgres database=postgres
