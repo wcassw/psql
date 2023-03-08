@@ -1,0 +1,52 @@
+postgres=# \d test
+Table "public.test"
+Column.     | Type    | Collation | Nullable | Default
+------------+---------+-----------+----------+---------
+sourcefile | text     |           |          |
+sourceline | integer  |           |          |
+seqno.     | integer  |           |.         |
+name.      | text     |           |          |
+setting.   | text     |           |          |
+applied   | boolean   |           |          |
+error     | text.     |           |          |
+Indexes:
+"test_idx" btree (sourcefile)
+"test_idx2" btree (sourceline)
+
+-- Find the table_size ( excluding the index_size)
+
+postgres=# SELECT pg_size_pretty (pg_relation_size('test'));
+pg_size_pretty
+----------------
+30 MB
+(1 row)
+
+-- Find the total_index size of the table
+
+postgres=# sELECT pg_size_pretty ( pg_indexes_size('test'));
+pg_size_pretty
+----------------
+26 MB
+(1 row)
+
+-- Find particular index size:
+
+postgres=# select pg_size_pretty(pg_total_relation_size('test_idx'));
+pg_size_pretty
+----------------
+19 MB
+
+postgres=# select pg_size_pretty(pg_total_relation_size('test_idx2'));
+pg_size_pretty
+----------------
+6496 kB
+
+Another method:
+
+postgres=# \di+ "test_idx"
+
+List of relations
+Schema  | Name     | Type  | Owner.  | Table | Size       | Description
+--------+----------+-------+---------+-------+------------+-------------
+public  | test_idx | index | dbaprod | test  | 8192 bytes |
+(1 row)
