@@ -1,0 +1,15 @@
+-- Finding statistics level of a column ( orders.orderdate)
+-- statistics level range is 1-10000 ( where 100 means 1 percent,10000 means 100 percent)
+
+pdbstore=> SELECT attname as column_name , attstattarget as stats_level FROM pg_attribute 
+     WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'orders') and attname='orderdate';
+
+column_name  | stats_level
+-------------+-------------
+orderdate    | 1000
+(1 row)
+
+-- To change statistics level of a column:
+
+pdbstore=> alter table orders alter column orderdate set statistics 1000;
+ALTER TABLE
