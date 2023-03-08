@@ -1,0 +1,8 @@
+-- Run this on hot standby server 
+
+postgres=# select pg_is_wal_replay_paused();
+pg_is_wal_replay_paused
+-------------------------
+f
+
+-- If the output is f then, streaming recovery is running, if t means not running.
