@@ -1,0 +1,7 @@
+-- First find the pid of the session:
+psqldb# SELECT datname as database, pid as pid, usename as username, application_name , client_addr , query 
+        FROM pg_stat_activity;
+
+<< Lets say the pid=112, in the below query pass the pid value to cancel that particular session query>>
+
+psqldb# SELECT pg_cancel_backend(pid) from pg_stat_activity where pid='112';
