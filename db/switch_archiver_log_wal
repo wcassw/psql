@@ -1,0 +1,5 @@
+postgres=# select pg_switch_wal();
+pg_switch_wal
+---------------
+0/1D392648
+(1 row)
