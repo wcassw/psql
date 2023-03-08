@@ -1,0 +1,7 @@
+-- List down table level privileges of user
+SELECT table_catalog, table_schema, table_name, privilege_type
+FROM information_schema.table_privileges
+WHERE grantee = 'USER_NAME';
+
+-- List down usage privileges of a user:
+select * from usage_privileges where grantee='USER_NAME';
