@@ -1,0 +1,29 @@
+psqldb=# SELECT name, setting FROM pg_settings WHERE category = 'File Locations';
+name                     | setting
+-------------------+---------------------------------------------
+config_file              | /Library/PostgreSQL/12/data/postgresql.conf
+data_directory           | /Library/PostgreSQL/12/data
+hba_file                 | /Library/PostgreSQL/12/data/pg_hba.conf
+ident_file               | /Library/PostgreSQL/12/data/pg_ident.conf
+external_pid_file        |
+(5 rows)
+
+---- alternatively ----
+
+psqldb=# show config_file;
+config_file
+--------------------------------------------
+/Library/PostgreSQL/12/data/postgresql.conf
+(1 row)
+
+psqldb=# show hba_file;
+hba_file
+-----------------------------------------
+/Library/PostgreSQL/12/data/pg_hba.conf
+(1 row)
+
+psqldb=# show ident_file;
+ident_file
+-------------------------------------------
+/Library/PostgreSQL/12/data/pg_ident.conf
+(1 row)
